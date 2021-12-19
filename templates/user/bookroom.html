@@ -1,0 +1,83 @@
+{% extends 'basic.html' %} {% block title %}Book Room {% endblock title %} {% block body %}
+
+
+
+<style>
+    .form-group {
+        margin: 0;
+
+    }
+</style>
+
+
+<div class="container" style="padding-top: 50px; padding-bottom: 50px; width: 50%;">
+    <form action="/user/book-room/book" method="POST">
+        {%csrf_token%}
+        {%load app_tags%}
+        <div class="row">
+
+            <div class="col card">
+                <h3 style="text-align: center; color: #28a745!important;">Your booking details</h3>
+
+                <div class="form-group">
+                    <label for="username">Hotel Name:</label>
+                    <input type="text" class="form-control " id="hotel" name="hotel" disabled value={{room.hotel.name}}>
+                </div>
+                <div class="form-group">
+                    <label for="username">Hotel Location:</label>
+                    <input type="text" class="form-control " id="location" name="location" disabled
+                        value={{room.hotel.location}}>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Room Type:</label>
+                    <input type="text" class="form-control " id="roomtype" name="roomtype" disabled
+                        value={{room.get_room_type_display}}>
+                </div>
+
+                <div class="form-group">
+                    <label for="person">Your Name:</label>
+                    <input type="text" class="form-control " id="username" name="username" required="true"
+                        value='{{request.user.first_name}} {{request.user.last_name}}' disabled>
+                </div>
+                <div class="form-group">
+                    <label for="person">Person:</label>
+                    <input type="number" class="form-control " id="person" name="person" min="1" max={{room.capacity}}
+                        required="true" value={{room.capacity}} disabled>
+                </div>
+                <div class="form-group">
+                    <label for="cin">Check-in:</label>
+
+                    <input type="date" class="form-control" id="cin" name="check_in" value="{{check_in}}">
+                </div>
+                <div class="form-group">
+                    <label for="cout">Check-Out:</label>
+
+                    <input type="date" class="form-control" id="cout" name="check_out" value="{{check_out}}">
+                </div>
+
+
+
+
+
+
+                <div style="text-align: center; margin-top: 15px;"><button type="submit" class="btn btn-primary">Confirm
+                    </button></div>
+
+                <input type="hidden" name="room_id" value={{room.id}}>
+            </div>
+
+
+        </div>
+    </form>
+
+</div>
+</div>
+
+
+
+
+
+
+
+{% endblock body %}

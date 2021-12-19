@@ -1,0 +1,142 @@
+{% extends 'basic.html' %}
+{% block title %}Hotel Reservasion System {% endblock title %}
+{% block body %}
+<!--Booking Section starts here-->
+<section>
+  <div class="container-fluid py-5 px-5">
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="row justify-content-center py-5 bg-light">
+        <div class="col-lg-4">
+          <label for="">Location</label>
+          <select class="form-control" name="search_location" id="roomstatus">
+            <!--Hotel id and location-->
+            <option>Location</option>
+            {% for each_location,each_hotel_id in all_location %}
+
+            <option value="{{each_hotel_id}}">{{each_location}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% load app_tags %}
+        <div class="col-lg-2">
+          <label for="">Check in</label>
+          <input class="form-control mr-sm-2" type="date" placeholder="Check in" name="cin" min="{%todays_date%}"
+            max="{% max_date %}" aria-label="Search" required="True" />
+        </div>
+        <div class="col-lg-2">
+          <label for="">Check Out</label>
+          <input class="form-control mr-sm-2" type="date" placeholder="Check out" name="cout" min="{%tommorow%}"
+            max="{% max_date%}" aria-label="Search" required="True" />
+        </div>
+        <div class="col-lg-2">
+          <label for="">Person</label>
+          <input class="form-control mr-sm-2" type="number" placeholder="Person" name="capacity" aria-label="Search"
+            required="True" />
+        </div>
+        <div class="col-lg-2">
+          <input type="submit" value="Check Availabilty" class="form-control mr-sm-2 btn btn-primary my-4"
+            style="position: relative; top: 7px" />
+        </div>
+
+      </div>
+    </form>
+  </div>
+</section>
+
+
+
+<div class="container">
+
+  {% if rooms %}
+  <h3 class="text-center text-success">Available Rooms </h3>
+  <hr>
+  {% endif %}
+
+  {% if rooms %}
+
+  <div class="row">
+    {% for r in rooms %}
+    <div class="col-4" style="margin-bottom: 30px;">
+
+
+      <div class="card">
+
+        <div class="child_left" style="float: left; overflow: hidden;">
+          <img class="card-img-top mx-auto" style="border-radius: 2%; height: 200px;" src="{{r.photo.url}}" alt="img"
+            ; />
+
+        </div>
+
+        <div class="child_right" style=" overflow: hidden; padding-top: 19px; padding-left: 25px;">
+
+          <p><b>Location:</b> {{ r.hotel.location }}</p>
+          <p><b> Room Type:</b> {{ r.get_room_type_display }}</p>
+          <p><b>Price:</b> {{ r.price }} tk /day</p>
+          <p><b>Capacity:</b> {{ r.capacity }} person</p>
+          <p><b>Service:</b> {{r.Services}} </p>
+          <p><b>Check In:</b> {{ cin }}</p>
+          <p><b>Check Out:</b> {{ cout }}</p>
+          <form action="/user/book-room" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="custId" name="roomid" value="{{r.id}}">
+            <input type="hidden" id="custId" name="cin" value="{{ cin }}">
+            <input type="hidden" id="custId" name="cout" value="{{ cout }}">
+
+            <input type="submit" value="Book Now" class="  btn btn-primary " />
+          </form>
+
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+    {% endfor %}
+  </div>
+
+  {% endif %}
+</div>
+
+
+
+
+
+<div class="container">
+  <h4 style="text-align: center; color: #28a745!important;  margin-top: 90px;">Best Hotels & Accommodations in
+    Bangladesh</h4>
+  <hr>
+  <div class="row">
+    {% for r in srooms %}
+    <div class="col-lg-4 mb-4 card">
+      <h1><img class="card-img-top" style=" height: 250px;" src="{{r.photo.url}}" alt="" width="250px"
+          class="img-fluid pt-4" /></h1>
+      <h3><a style="text-decoration: none;" href="/{{r.id}}">{{ r.get_room_type_display }}</a></h3>
+      <p>Price:{{ r.price }}tk /day</p>
+      <p>Location:{{ r.hotel.location }}</p>
+
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+<!--Roo tables ends here-->
+
+<footer class="" style="text-align: center;">
+
+  <div class="abc" style="background-color: #2C3E50; margin-top: 200px;">
+
+    <p style="padding:10px; color: #fff; margin: 0;">
+      Copyright &copy;
+      <script>document.write(new Date().getFullYear());</script>
+      All rights reserved by Hotel Reservation System
+    </p>
+
+  </div>
+</footer>
+
+{% endblock body %}

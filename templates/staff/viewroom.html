@@ -1,0 +1,102 @@
+ {% extends 'basic.html' %} {% block title %}View Room {% endblock title %}
+  {% block body %}
+
+<h3 class="text-success" style="text-align: center;">Room Details</h3>
+<hr>
+<div class="container mx-0 ">
+
+  <table class="table">
+    <thead>
+        <th>Room Number</th>
+        <th>Type</th>
+        <th>Capacity</th>
+        <th>Size</th>
+        <th>Status</th>
+        <th>City</th>
+        <th>State</th>
+    </thead>
+    <tr>
+      <td>0{{room.roomnumber}}</td>
+      <td>{{room.get_room_type_display}}</td>
+      <td>{{room.capacity}} person</td>
+      <td>{{room.size}} sq mt</td>
+      <td>{{room.get_status_display| capfirst}}</td>
+      <td>{{room.hotel.location| capfirst}}</td>
+      <td>{{room.hotel.state| capfirst}}</td>
+     
+    </tr>
+  </table>
+
+    <!-- <p><b>Number :-</b> {{room.roomnumber}}</p>
+    <p><b>Type :-</b> {{room.get_room_type_display}}</p>
+    <p><b>Capacity :-</b> {{room.capacity}} person</p>
+    <p><b>Size :-</b> {{room.size}} ft</p>
+    <p><b>Status :-</b> {{room.get_status_display| capfirst}} </p>
+    <p><b>City :-</b> {{room.hotel.location| capfirst}} </p>
+    <p><b>State :-</b> {{room.hotel.state| capfirst}} </p> -->
+    <!-- <p><b>India :-</b> {{room.hotel.country| capfirst}} </p> -->
+</div>
+
+
+<hr> {% if reservations %}
+<h3 class="text-success"  style="text-align: center;">Booking Details</h3>
+<table class="table">
+    <thead>
+        <th>Customer Name</th>
+        <th>Person</th>
+        <th>check in</th>
+        <th>check out</th>
+        <th>Price</th>
+        <th>Number</th>
+        <th>Trx Id</th>
+        <th>Status</th>
+        <th>Change Status</th>
+        <th>Action</th>   
+    </thead>
+    {% for each_detail in reservations %}
+    <tr>
+        <td>{{each_detail.guest.first_name}} {{each_detail.guest.last_name}}</td>
+        <td>{{each_detail.room.capacity}}</td>
+        <td>{{each_detail.check_in}}</td>
+        <td>{{each_detail.check_out}}</td>
+        <td>{{each_detail.total_price}}</td>
+        <td>{{each_detail.payment_number}}</td>
+        <td>{{each_detail.trnxid}}</td>  
+        <td>{{each_detail.get_status_display}}</td>
+        <td>
+        <form action="/staff/panel/change-status" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                  <select class="form-control" name="status" id="roomtype">
+                    <option value="1">Pending</option>
+                    <option value="2">Approve</option>
+                    <option value="3">Cancel</option>
+                  </select>
+                </div>
+                
+  
+        </td>
+        <td><button type="submit" class="btn btn-primary">Submit</button>
+          <input type="hidden" name="reservationid" value="{{each_detail.id}}">
+        
+        </form>
+        {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td><b>Total bookings = </b>{{reservations | length}}</td>
+    </tr>
+
+</table>
+{% else %}
+
+
+<p>No details found</p>
+{% endif %}
+
+
+
+
+
+
+ {% endblock body %}

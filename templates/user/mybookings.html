@@ -1,0 +1,77 @@
+{% extends 'basic.html' %} {% block title %}Dashboard {% endblock title %} {% block body %}
+{% load app_tags %}
+<h3 class="text-center  text-success">My Bookings </h3>
+<table class="table">
+    <thead>
+        <th>Customer Name</th>
+
+        <th>Room</th>
+        <th>Location</th>
+        <th>Person</th>
+        <th>Check in</th>
+        <th>Check out</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Payment</th>
+        <th>Report</th>
+        <th>Action</th>
+
+
+    </thead>
+    {% for each_booking in bookings %}
+    <tr>
+        <td>{{each_booking.guest.first_name}} {{each_booking.guest.last_name}} </td>
+
+        <td>{{each_booking.room.roomnumber}}</td>
+        <td>{{each_booking.room.hotel.location}}</td>
+        <td>{{each_booking.room.capacity}}</td>
+        <td>{{each_booking.check_in}}</td>
+        <td>{{each_booking.check_out}}</td>
+        <td>{{each_booking.total_price}}</td>
+        <td>{{each_booking.get_status_display}}</td>
+        <form action="{% url 'makepayment' %}" method="POST">
+            {% csrf_token %}
+            <td><button type="submit" class="btn btn-danger">Payment</button> </td>
+            <input type="hidden" name="reservationid" value="{{each_booking.id}}">
+        </form>
+        <td> <a href="/user/bookings/{{each_booking.id}}"> <button type="submit" class="btn btn-danger">Print</button>
+            </a> </td>
+        {% if each_booking.get_status_display == 'Pending' %}
+        <td>
+            <form action="/user/panel/change-status" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">cancel</button>
+                <input type="hidden" name="reservationid" value="{{each_booking.id}}">
+            </form>
+        </td>
+        {% endif %}
+
+
+
+    </tr>
+    {% endfor %}
+
+    <!-- <h1>Total = {{ total }}</h1> -->
+
+</table>
+
+
+
+<footer class="" style="text-align: center;">
+
+    <div class="abc" style="background-color: #2C3E50; margin-top: 338px; ">
+
+        <p style="padding:10px; color: #fff; margin: 0;">
+            Copyright &copy;
+            <script>document.write(new Date().getFullYear());</script>
+            All rights reserved by Hotel Reservation System
+        </p>
+
+    </div>
+
+
+
+
+</footer>
+
+{% endblock body %}
